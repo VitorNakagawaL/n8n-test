@@ -1,0 +1,135 @@
+{
+  "active": true,
+  "connections": {
+    "FilterData": {
+      "main": [
+        [
+          {
+            "node": "InsertData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check User ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check User ID": {
+      "main": [
+        [
+          {
+            "node": "FilterData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-13T15:21:58.808Z",
+  "id": "B7MSEmqGb9jTjunE",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[prod] - Banco de Dados | Save Data To DB - Supabase",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ { ...$('Webhook').item.json.body.data, \"user_id\": $json.userID } }}",
+        "options": {}
+      },
+      "id": "3340731c-f6e8-4b42-ae97-46afc6befdc0",
+      "name": "FilterData",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        580,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "={{ $('Webhook').item.json.body.tableName }}",
+        "dataToSend": "autoMapInputData"
+      },
+      "id": "95278c68-f3fc-4b33-9e68-55382a0c83fa",
+      "name": "InsertData",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        780,
+        400
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "xHU6641p7HFQw55Y",
+          "name": "[prod] Supabase | On hold"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sendDataToSupabase",
+        "options": {}
+      },
+      "id": "d6519254-6b74-45e0-ace3-18899aa2ff35",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        400
+      ],
+      "webhookId": "25e42ef9-47ee-4c81-9330-5758d013734b"
+    },
+    {
+      "parameters": {
+        "jsCode": "function getUserId(token) {\n  const parts = token.split('.');\n\n  if (parts.length !== 3) {\n    throw new Error('Invalid JWT Token');\n  }\n\n  const payload = parts[1];\n  const decodedPayload = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));\n\n  if (!decodedPayload.sub) {\n    throw new Error('No ID field (sub) in token');\n  }\n\n  return decodedPayload.sub;\n}\n\nconst bearerToken = $('Webhook').first().json.headers.authorization;\nconst jwtToken = bearerToken.replace('Bearer ', '');\n\nlet userID = \"\";\n\ntry {\n  userID = getUserId(jwtToken);\n} catch (error) {\n  userID = \"\";\n}\n\nreturn [ {userID}]\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        400
+      ],
+      "id": "336c039a-087c-4439-95d9-7eefecc5d068",
+      "name": "Check User ID"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-10-29T13:40:47.488Z",
+      "updatedAt": "2024-10-29T13:40:47.488Z",
+      "id": "FViUlsSlXzSMnZ07",
+      "name": "SUPABASE"
+    },
+    {
+      "createdAt": "2024-12-16T15:50:17.549Z",
+      "updatedAt": "2024-12-16T15:50:17.549Z",
+      "id": "90BsZzaKRkurBY1q",
+      "name": "Prod"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-13T15:32:44.819Z",
+  "versionId": "aefc3de4-d5f6-4424-8dab-bc398312df0a"
+}
