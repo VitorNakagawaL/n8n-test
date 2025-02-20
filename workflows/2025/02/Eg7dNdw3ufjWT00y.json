@@ -1,0 +1,290 @@
+{
+  "active": true,
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GET documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET chats_documents": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GET documents": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "GET chats_documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-04T17:10:47.573Z",
+  "id": "Eg7dNdw3ufjWT00y",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[dev] - Banco de Dados | Get Documents By Chat ID",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "29de1327-bbc8-42b4-b73e-4c121514d802",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "98d4ce95-f590-4585-aeb2-e36e7ef8f486",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1160,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "chats_documents",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Webhook').first().json.body.chatId }}"
+            }
+          ]
+        }
+      },
+      "id": "d23faa82-a782-43b5-be03-5b3b49eb01c3",
+      "name": "GET chats_documents",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        980,
+        120
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "5ZmsFQKTpNKGDfUq",
+          "name": "[dev] Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "documents",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.document_id }}"
+            }
+          ]
+        }
+      },
+      "id": "a49187a0-1287-44f3-ae97-a3be70fd1dd4",
+      "name": "GET documents",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        140
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "5ZmsFQKTpNKGDfUq",
+          "name": "[dev] Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Objeto para armazenar a maior versão de cada nome de documento\nconst latestDocuments = {};\n\n// Primeiro loop: Identificar a maior versão de cada file_name\nfor (const item of $input.all()) {\n  const document = item.json;\n  const file_name = document.file_name?.replace(/\\s+/g, ' ').trim();  // Normaliza o nome do arquivo removendo espaços extras\n  const version = document.version;\n\n  // Armazena o documento se ainda não existir ou se a versão atual for maior\n  if (!latestDocuments[file_name] || latestDocuments[file_name].version < version) {\n    latestDocuments[file_name] = document;\n  }\n}\n\n// Converter o objeto para um array com apenas os documentos de maior versão\nconst finalDocuments = Object.values(latestDocuments);\n\n// Retorna a lista final com apenas os documentos com a maior versão\nreturn finalDocuments;"
+      },
+      "id": "f9dbef21-ceaa-432a-a3fa-e696f08763c2",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fetchDocumentsByChatIdDev",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "0c9d874c-2d53-4824-bad7-ca2329cf877f",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        760,
+        120
+      ],
+      "webhookId": "1c04940a-105f-45df-bc14-5b3f967789bb"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8730fa66-bb95-4e70-aa15-ecdbbee9e6b1",
+              "leftValue": "={{ $input.first().json.keys().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "90eca65c-4e2e-4fee-8051-91c3d7ef741a",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1500,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {}
+      },
+      "id": "f5c8157b-d3ec-4346-bd72-c44a7a88f7eb",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        -240
+      ]
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-10-29T13:40:47.488Z",
+      "updatedAt": "2024-10-29T13:40:47.488Z",
+      "id": "FViUlsSlXzSMnZ07",
+      "name": "SUPABASE"
+    },
+    {
+      "createdAt": "2024-12-16T16:09:23.335Z",
+      "updatedAt": "2024-12-16T16:09:23.335Z",
+      "id": "j7cIL2iafnMl9zM7",
+      "name": "Dev"
+    },
+    {
+      "createdAt": "2025-02-05T19:30:14.324Z",
+      "updatedAt": "2025-02-05T19:30:14.324Z",
+      "id": "b4EXbYR7C8wiST8C",
+      "name": "DB"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-05T19:36:57.971Z",
+  "versionId": "95adf2db-c109-40a5-a164-add4b466b266"
+}
