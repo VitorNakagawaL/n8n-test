@@ -1,0 +1,148 @@
+{
+  "active": true,
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-10-14T13:58:56.129Z",
+  "id": "zvsPrZefnOH72Dkd",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[prod] - Análise crítica | 5 - Análise logística",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://flowise.interseas-caprover.startse.com/api/v1/prediction/4acd348a-f7cf-48e8-a896-7546851ab551",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "question",
+              "value": "={{ $json.body }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c57666b6-3d31-4c79-849b-4fce8ebc7ad5",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "baef2399-07ac-4b77-9840-4ab95ed53215",
+              "name": "output",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2671b62d-1e4a-4c95-b077-32bece71d814",
+      "name": "output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1480,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2a6dfa76-a558-4e6f-92ef-b587b8dab1cb",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1700,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "criticalAnalysisFifthStep",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "73b0544c-a4cf-4eff-8689-6f7564624d74",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        400
+      ],
+      "webhookId": "5af7aa4e-06b6-4b16-ae9b-9ae15b174332"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-12-16T15:50:17.549Z",
+      "updatedAt": "2024-12-16T15:50:17.549Z",
+      "id": "90BsZzaKRkurBY1q",
+      "name": "Prod"
+    },
+    {
+      "createdAt": "2025-02-05T19:24:04.517Z",
+      "updatedAt": "2025-02-05T19:24:04.517Z",
+      "id": "QjzCPV3nhLBek2xR",
+      "name": "Análise Crítica"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-13T20:14:14.322Z",
+  "versionId": "18952c0e-898b-4b3a-9634-dfdb51e9f914"
+}
