@@ -1,0 +1,209 @@
+{
+  "active": true,
+  "connections": {
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-04T16:56:41.255Z",
+  "id": "nEpWTbzJWPeT1eFj",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[dev] - Banco de Dados | Get Chats-Documents Relation",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "chats_documents",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.body.chatId }}"
+            },
+            {
+              "keyName": "document_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.body.documentId }}"
+            }
+          ]
+        }
+      },
+      "id": "3d502273-7c0d-41b3-99b0-523a9ab47056",
+      "name": "Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        480,
+        780
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "5ZmsFQKTpNKGDfUq",
+          "name": "[dev] Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "62532cb4-d5d1-4e9c-bff4-2df5504035f4",
+              "leftValue": "={{ $('Webhook1').item.json.body.chatId }}",
+              "rightValue": "={{ $json.chat_id }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "f149e022-b05e-4d4d-adc7-38c1e140a2a0",
+              "leftValue": "={{ $('Webhook1').item.json.body.documentId }}",
+              "rightValue": "={{ $json.document_id }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a1893cdd-dbb2-4365-81f5-b21dc6bfe05b",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "true",
+        "options": {}
+      },
+      "id": "34939214-89a5-46e1-91c9-10bc90688a3e",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "false",
+        "options": {}
+      },
+      "id": "b2590a26-1250-486e-9300-6da917022640",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fetchChatDocumentRelationDev",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "645fd7ba-f97c-4f61-8103-3c39619b2051",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        280,
+        780
+      ],
+      "webhookId": "06ccc5df-80da-4026-a21c-0f53fcfdeffa"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-10-29T13:40:47.488Z",
+      "updatedAt": "2024-10-29T13:40:47.488Z",
+      "id": "FViUlsSlXzSMnZ07",
+      "name": "SUPABASE"
+    },
+    {
+      "createdAt": "2024-12-16T16:09:23.335Z",
+      "updatedAt": "2024-12-16T16:09:23.335Z",
+      "id": "j7cIL2iafnMl9zM7",
+      "name": "Dev"
+    },
+    {
+      "createdAt": "2025-02-05T19:30:14.324Z",
+      "updatedAt": "2025-02-05T19:30:14.324Z",
+      "id": "b4EXbYR7C8wiST8C",
+      "name": "DB"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-05T19:37:48.459Z",
+  "versionId": "276906d8-38a9-44f8-b766-4a793a03dd61"
+}
