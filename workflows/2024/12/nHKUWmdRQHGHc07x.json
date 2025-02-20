@@ -1,0 +1,600 @@
+{
+  "active": true,
+  "connections": {
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "setAttributes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatMessage1": {
+      "main": [
+        [
+          {
+            "node": "downloadJSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "structureMessage1": {
+      "main": [
+        [
+          {
+            "node": "formatMessage1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "extractAttributesCode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "downloadJSON": {
+      "main": [
+        [
+          {
+            "node": "formatObject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setAttributes": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatObject": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formatObject1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "extractAttributesCode": {
+      "main": [
+        [
+          {
+            "node": "setAttributesInfo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setFlowiseInput": {
+      "main": [
+        [
+          {
+            "node": "Flowise HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flowise HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "setResponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setResponse": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setNegativeResponse": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "formatObject1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "setNegativeResponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "structureMessage1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setAttributesInfo": {
+      "main": [
+        [
+          {
+            "node": "setFlowiseInput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-12-16T17:09:53.419Z",
+  "id": "nHKUWmdRQHGHc07x",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[prod] - Análise crítica | 7 - Atributos da NCM",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "d028f212-9eb1-4c97-906c-b9745568e4a5",
+              "leftValue": "={{ $json.codigoNcm.replace(/\\./g, '') }}",
+              "rightValue": "={{ $('structureMessage1').item.json.NCM.replace(/\\./g, '') }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b6981222-0978-4b3e-9173-5ef3beb97b49",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.1,
+      "position": [
+        -840,
+        160
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a048432c-20ae-4868-958c-988428232e83",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        520,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d042684-e288-47e4-8362-7867fbcccfe4",
+              "name": "=NCM",
+              "value": "={{ $('structureMessage1').item.json.NCM }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "275fad9b-1854-4b74-bd32-38641bfd9805",
+      "name": "formatMessage1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1400,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const parsedJson = $json.body;\n\nreturn JSON.parse(parsedJson);"
+      },
+      "id": "786d022e-d716-4413-b0ca-4ba70e076771",
+      "name": "structureMessage1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1560,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=listaNcm",
+        "options": {
+          "includeBinary": false
+        }
+      },
+      "id": "4c509267-6a8d-45be-b014-aab380d1ceb7",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=detalhesAtributos",
+        "options": {}
+      },
+      "id": "f4d64cbf-f487-465f-a140-e9382fc1096c",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://kfsbysglomslqkakspfj.supabase.co/storage/v1/object/authenticated/comex-ai/AtributosNCM",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "options": {}
+      },
+      "id": "4c41001f-019e-4cd5-bd10-99536b5c1521",
+      "name": "downloadJSON",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1260,
+        160
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "xHU6641p7HFQw55Y",
+          "name": "[prod] Supabase | On hold"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a8278e8e-6b32-47ec-a2fd-0ff03286040a",
+              "name": "Atributos",
+              "value": "={{ $json.listaAtributos }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3663f8b2-6cc1-4145-8fae-0c659fb4dde0",
+      "name": "setAttributes",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -700,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const text_list = $('downloadJSON').all();\nconst listaNcm = text_list['0']['json'];\nreturn listaNcm;"
+      },
+      "id": "5e2309e2-4f64-4b77-91da-0b9165bb7ba3",
+      "name": "formatObject",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const text_list = $('downloadJSON').all();\nconst listaNcm = text_list['0']['json'];\nreturn listaNcm;"
+      },
+      "id": "2c8d7ccf-d87e-4521-ade7-ffab080c60b0",
+      "name": "formatObject1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        -180
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const resultado = [];\n\nconst array = $(\"setAttributes\").all();\n\nconst attributes = JSON.parse(array[\"0\"][\"json\"][\"Atributos\"]);\n\nattributes.forEach((objeto) => {\n  if (objeto.modalidade !== \"Exportação\") {\n    resultado.push({ codigo: objeto.codigo, obrigatorio: objeto.obrigatorio });\n  }\n});\n\nreturn resultado;\n"
+      },
+      "id": "694e5f92-f3bf-4250-87aa-c2ad60fee012",
+      "name": "extractAttributesCode",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        -180
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6248d7f-722e-4bae-8e59-d4f1433338ad",
+              "name": "output",
+              "value": "=Descricao: {{ JSON.stringify($('setAttributesInfo').all())}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "=",
+        "options": {}
+      },
+      "id": "4c2cf26c-5206-426f-965e-4538b450ff34",
+      "name": "setFlowiseInput",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -180
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://flowise.interseas-caprover.startse.com/api/v1/prediction/2a2317e2-6106-4ec5-a047-90f24764f38b",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "question",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "adb0aec8-4ae7-4a43-b558-90f9d32499c6",
+      "name": "Flowise HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6248d7f-722e-4bae-8e59-d4f1433338ad",
+              "name": "output",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "=",
+        "options": {}
+      },
+      "id": "85cb0c5b-5540-435e-b758-ab1d3c686e2a",
+      "name": "setResponse",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "011ac247-5801-4ebf-8c1a-d822c11862b9",
+              "name": "output",
+              "value": "=NCM {{ $('formatMessage1').first().json.NCM}}  Não encontrado na base",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "54f7a482-25be-4fa6-bd12-98d43f34e75c",
+      "name": "setNegativeResponse",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -60,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "89267302-0d1b-4305-a734-ef5d563527ea",
+              "leftValue": "={{ $json.Atributos }}",
+              "rightValue": "=null",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "81ba8f1a-acfc-452c-8788-4d3209989e94",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -580,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "criticalAnalysisSeventhStep",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "159acf67-6967-4330-bd68-8e55293fcb0b",
+      "name": "Webhook1",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1740,
+        160
+      ],
+      "webhookId": "8449d24d-be2b-4d44-aa71-24b3b128b1cc"
+    },
+    {
+      "parameters": {
+        "jsCode": "function extrairDescricoes(dominio) {\n  return dominio.map(item => item.descricao);\n}\n\nfunction extrairCodigoENome(condicionados) {\n  return condicionados.map(item => {\n    const { codigo, nome } = item.atributo || {};\n    return { codigo, nome };\n  });\n}\n\nconst dataMap = new Map(\n  $('Split Out').all().map(item => [\n    item.json.codigo, \n    {\n      nome: item.json.nome,\n      dominio: item.json.dominio,\n      condicionados: item.json.condicionados\n    }\n  ])\n);\n\n\nconst updatedReducedData = $('extractAttributesCode').all().map(item => {\n  const mappedData = dataMap.get(item.json.codigo) || {};\n  \n  return {\n    json: {\n      ...item.json,\n      nome: mappedData.nome || null,\n      dominio: extrairDescricoes(mappedData.dominio) || null,\n      condicionados: extrairCodigoENome(mappedData.condicionados) || null,\n    }\n  };\n});\n\nreturn updatedReducedData;\n"
+      },
+      "id": "c91979df-cdfd-4f46-9f15-310ba13fd4bf",
+      "name": "setAttributesInfo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        -180
+      ],
+      "executeOnce": true
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-12-16T15:50:17.549Z",
+      "updatedAt": "2024-12-16T15:50:17.549Z",
+      "id": "90BsZzaKRkurBY1q",
+      "name": "Prod"
+    },
+    {
+      "createdAt": "2025-02-05T19:24:04.517Z",
+      "updatedAt": "2025-02-05T19:24:04.517Z",
+      "id": "QjzCPV3nhLBek2xR",
+      "name": "Análise Crítica"
+    },
+    {
+      "createdAt": "2025-02-05T19:24:53.496Z",
+      "updatedAt": "2025-02-05T19:24:53.496Z",
+      "id": "Ph18Jay9XtHazu4I",
+      "name": "Atributos do NCM"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-13T20:00:14.329Z",
+  "versionId": "9cdf5cc4-0f02-43fa-9775-a21556ca1950"
+}
