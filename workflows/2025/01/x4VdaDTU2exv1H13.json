@@ -1,0 +1,329 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "setAttributes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setAttributes": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "existenceResponse",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "noExistenceResponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "existenceResponse": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "noExistenceResponse": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-01-13T11:22:57.433Z",
+  "id": "x4VdaDTU2exv1H13",
+  "meta": null,
+  "name": "[prod] - Validador de NCM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ncmValidator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        100
+      ],
+      "id": "407870ea-b476-4a1a-9644-9c6201f065dd",
+      "name": "Webhook",
+      "webhookId": "7c00376c-7e3f-49d0-95bf-8ebf116cc1ef"
+    },
+    {
+      "parameters": {
+        "url": "https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        100
+      ],
+      "id": "a055a802-243f-474a-a183-9c993f9ebfb9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "Nomenclaturas",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        100
+      ],
+      "id": "eacb9e30-bd2a-4938-b5fd-29aa8499a756",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5f0feecd-30f1-4f94-af6a-c0b1492e31eb",
+              "leftValue": "={{ $json.Codigo.replace(/\\./g, '') }}",
+              "rightValue": "={{ $('Webhook').item.json.body.NCM.replace(/\\./g, '') }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -640,
+        100
+      ],
+      "id": "62e6e0fd-93a5-401c-914b-b64640502834",
+      "name": "Filter",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a8278e8e-6b32-47ec-a2fd-0ff03286040a",
+              "name": "Codigo",
+              "value": "={{ $json.Codigo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "949f8c37-421f-478d-9398-3d7b64164e65",
+      "name": "setAttributes",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        100
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        100
+      ],
+      "id": "e249c065-3a60-46d5-bee5-65791a68408a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5bee74f4-40c6-476a-815f-e28d4fac9d73",
+              "leftValue": "={{ $('setAttributes').first().json.Codigo }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -320,
+        100
+      ],
+      "id": "64b9f274-7804-4cba-9f2f-5da8d39ad084",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "85325890-cfad-4fd4-8b6e-b78e85a136a8",
+              "name": "isNCM",
+              "value": "=true",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b3e6a7bc-0b70-465c-bc1a-5715f2a2d22f",
+      "name": "existenceResponse"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5790a36-f4ab-49b2-a201-42dc3dc567f3",
+              "name": "isNCM",
+              "value": "=false",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        200
+      ],
+      "id": "cd4406ae-4078-49bb-866d-bbed6ad998b1",
+      "name": "noExistenceResponse"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-12-16T15:50:17.549Z",
+      "updatedAt": "2024-12-16T15:50:17.549Z",
+      "id": "90BsZzaKRkurBY1q",
+      "name": "Prod"
+    },
+    {
+      "createdAt": "2025-02-05T19:25:50.941Z",
+      "updatedAt": "2025-02-05T19:25:50.941Z",
+      "id": "T5pCNoivMcmKvmfm",
+      "name": "Validador NCM"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-05T19:25:52.165Z",
+  "versionId": "6ff22193-ca05-41ca-b780-f94c27ea282c"
+}
