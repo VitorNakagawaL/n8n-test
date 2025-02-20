@@ -1,0 +1,170 @@
+{
+  "active": true,
+  "connections": {
+    "Decompress": {
+      "main": [
+        [
+          {
+            "node": "Upload object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "downloadJson",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "downloadJson": {
+      "main": [
+        [
+          {
+            "node": "Decompress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-01-02T19:38:10.912Z",
+  "id": "LX7Xn5MhwA8nDMYt",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[prod] - Atributos do NCM | Supabase Trigger",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c1bebe0e-ecd6-47fc-aa4f-cc05d6358cf4",
+      "name": "Decompress",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        2300,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://kfsbysglomslqkakspfj.supabase.co/storage/v1/object/comex-ai/AtributosNCM",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-upsert",
+              "value": "true"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "file_0",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "07e4e2e6-85dc-4736-93cd-6482f68512bf",
+      "name": "Upload object",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2500,
+        240
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "xHU6641p7HFQw55Y",
+          "name": "[prod] Supabase | On hold"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "0faf3917-0d53-46d9-8677-e6675e2ea1c6",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        1960,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://portalunico.siscomex.gov.br/cadatributos/api/atributo-ncm/download/json",
+        "options": {}
+      },
+      "id": "863caebd-94ca-4f98-9fe8-9f3860dadc15",
+      "name": "downloadJson",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2120,
+        240
+      ]
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "tags": [
+    {
+      "createdAt": "2024-12-16T15:50:17.549Z",
+      "updatedAt": "2024-12-16T15:50:17.549Z",
+      "id": "90BsZzaKRkurBY1q",
+      "name": "Prod"
+    },
+    {
+      "createdAt": "2025-02-05T19:24:53.496Z",
+      "updatedAt": "2025-02-05T19:24:53.496Z",
+      "id": "Ph18Jay9XtHazu4I",
+      "name": "Atributos do NCM"
+    },
+    {
+      "createdAt": "2024-10-29T13:40:47.488Z",
+      "updatedAt": "2024-10-29T13:40:47.488Z",
+      "id": "FViUlsSlXzSMnZ07",
+      "name": "SUPABASE"
+    },
+    {
+      "createdAt": "2025-02-04T12:57:49.230Z",
+      "updatedAt": "2025-02-04T12:57:49.230Z",
+      "id": "wtZEmNqNNLEIK7tp",
+      "name": "SUPABASE - Manual"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-05T19:28:35.241Z",
+  "versionId": "a69f1349-ebf7-40bb-8b41-54f745b0b56e"
+}
