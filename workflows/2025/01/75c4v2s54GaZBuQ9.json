@@ -1,0 +1,220 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Variáveis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variáveis": {
+      "main": [
+        [
+          {
+            "node": "Authenticate on Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authenticate on Supabase": {
+      "main": [
+        [
+          {
+            "node": "Responde - Autenticando",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responde - Dados incorretos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-01-10T11:43:55.675Z",
+  "id": "75c4v2s54GaZBuQ9",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[prod] - Login | Authenticate",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "auth/v2",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "9deb6485-f93a-4843-b8fd-0a5cc48e2025",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        560,
+        320
+      ],
+      "webhookId": "59970530-853f-4845-ac5f-d5473c8dc9bb"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"token\": \"{{ $json.access_token }}\" }",
+        "options": {}
+      },
+      "id": "99db38de-fad7-401d-8843-0da1f7eeabae",
+      "name": "Responde - Autenticando",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{ \"success\": false, \"error_code\": \"invalid_credentials\" }",
+        "options": {}
+      },
+      "id": "e3a2b54d-ace1-4d44-9fbd-3b1c22cb3357",
+      "name": "Responde - Dados incorretos",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2ad93264-d39e-415c-816d-5f2ac5d9e8b9",
+              "name": "supabaseAccountID",
+              "value": "kfsbysglomslqkakspfj",
+              "type": "string"
+            },
+            {
+              "id": "831a4266-ce15-4fe4-b796-5ccc3544f669",
+              "name": "supabaseServiceRoleKey",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtmc2J5c2dsb21zbHFrYWtzcGZqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMTA4NTM0NCwiZXhwIjoyMDQ2NjYxMzQ0fQ.mPoyHkH8MRr2r5H5cSRMrhXe4CG4sEvpjhtLjfA9BOA",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fceba4cf-3ece-47ff-8719-b3e169b501a7",
+      "name": "Variáveis",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        760,
+        320
+      ],
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://{{ $('Variáveis').item.json.supabaseAccountID }}.supabase.co/auth/v1/token",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "password"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.supabaseServiceRoleKey }}"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $json.supabaseServiceRoleKey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $('Webhook').item.json.body.username }}"
+            },
+            {
+              "name": "password",
+              "value": "={{ $('Webhook').item.json.body.password }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        320
+      ],
+      "id": "8913cbdb-0bae-4419-a97f-840f25e3f470",
+      "name": "Authenticate on Supabase",
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-10-29T13:40:47.488Z",
+      "updatedAt": "2024-10-29T13:40:47.488Z",
+      "id": "FViUlsSlXzSMnZ07",
+      "name": "SUPABASE"
+    },
+    {
+      "createdAt": "2024-12-16T15:50:17.549Z",
+      "updatedAt": "2024-12-16T15:50:17.549Z",
+      "id": "90BsZzaKRkurBY1q",
+      "name": "Prod"
+    },
+    {
+      "createdAt": "2025-02-04T12:57:49.230Z",
+      "updatedAt": "2025-02-04T12:57:49.230Z",
+      "id": "wtZEmNqNNLEIK7tp",
+      "name": "SUPABASE - Manual"
+    },
+    {
+      "createdAt": "2025-02-05T19:28:59.435Z",
+      "updatedAt": "2025-02-05T19:28:59.435Z",
+      "id": "EMcRUzq8shICg8uK",
+      "name": "Auth/Login"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-13T20:12:19.932Z",
+  "versionId": "bae11d21-63de-42a9-8a20-f5181cb2b150"
+}
