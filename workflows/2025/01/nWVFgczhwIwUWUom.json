@@ -1,0 +1,101 @@
+{
+  "active": true,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-01-20T19:01:46.454Z",
+  "id": "nWVFgczhwIwUWUom",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Ligação Sarah - Vale do Silício",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "StartSe",
+        "formDescription": "Receba uma ligação da Sarah",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Telelefone com DDD",
+              "placeholder": "43988888888",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Primeiro Nome",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "buttonLabel": "Receber Ligação"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2d808a96-63ec-4cfc-9c5a-9118c1697db9",
+      "name": "On form submission",
+      "webhookId": "fa6beaaa-ba49-4962-bde0-fa8e593120ad"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer "
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"assistantId\": \"b9dcad12-1ad1-4198-bda4-41b76f06508a\",\n  \"phoneNumberId\": \"4c24ae53-1668-4be1-b237-0c11cf3014c4\",\n  \"customer\": {\n    \"name\": \"{{ $json['Primeiro Nome'] }}\",\n    \"number\": \"+55{{ $json['Telelefone com DDD'] }}\"\n  },\n  \"assistantOverrides\": {\n    \"firstMessage\": \"Oi {{ $json['Primeiro Nome'] }}... Aqui é a Sarah da StartSe... Tem um minuto para conversarmos?\",\n    \"variableValues\": {\n       \"extraKnowledge\": \"\" \n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "ead61b10-64fa-4c92-a67e-ed98954a8fac",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-20T19:01:50.741Z",
+      "updatedAt": "2025-01-20T19:01:50.741Z",
+      "id": "lK7S4WWOL37dByn0",
+      "name": "hackathon"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2025-01-20T19:41:36.000Z",
+  "versionId": "f0da9bf7-e542-4cb4-9e8c-55942a9d4cd7"
+}
