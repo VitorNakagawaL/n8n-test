@@ -275,7 +275,9 @@
   },
   "createdAt": "2025-03-06T20:43:34.682Z",
   "id": "gqdKSVz01hOtaY4G",
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "name": "My workflow 2",
   "nodes": [
     {
@@ -726,8 +728,8 @@
       "typeVersion": 2.2,
       "credentials": {
         "slackOAuth2Api": {
-          "id": "ll1HuL00hF48UDJc",
-          "name": "Slack account 2"
+          "id": "8D39fr421qKDW8t2",
+          "name": "Slack account 3"
         }
       }
     },
@@ -763,7 +765,6 @@
     },
     {
       "parameters": {
-        "authentication": "oAuth2",
         "resource": "file",
         "operation": "get",
         "owner": {
@@ -789,6 +790,12 @@
       ],
       "typeVersion": 1,
       "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "FsJrC7lGNNn9olnq",
+          "name": "GitHub account 2"
+        }
+      },
       "continueOnFail": true
     },
     {
@@ -838,6 +845,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-03-06T22:15:43.000Z",
-  "versionId": "8957928c-c01c-4f68-9bae-dfc1102c68d6"
+  "updatedAt": "2025-03-06T22:21:38.000Z",
+  "versionId": "06934c53-a4d1-4f12-9814-4d49dc817f3c"
 }
