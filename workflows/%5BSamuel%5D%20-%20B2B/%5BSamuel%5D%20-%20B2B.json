@@ -1,0 +1,114 @@
+{
+  "active": false,
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-01-22T12:21:40.878Z",
+  "id": "QydCoX7nONaWaLxH",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "[Samuel] - B2B",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Lista de possiveis Leads",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Lista de leads",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "737434dc-93f6-4fb3-830e-30bcca2903ae",
+      "name": "On form submission",
+      "webhookId": "34090338-b0e1-49b7-80d0-85345612423f"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://flowise.hackathon-caprover.startse.com/api/v1/prediction/cf66ed7d-b40f-4113-a0b0-557d15b44d6e",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "question",
+              "value": "={{ $json.Empresa }}, {{ $json.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "cc328fdf-dc95-4a8f-a52a-4d60ac565563",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "binaryPropertyName": "Lista_de_leads",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "7a119efd-db1b-4221-88ff-2ee56304d519",
+      "name": "Extract from File"
+    }
+  ],
+  "pinData": {},
+  "repo_name": "n8n-test",
+  "repo_owner": "VitorNakagawaL",
+  "repo_path": "workflows/",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-22T18:29:41.000Z",
+  "versionId": "7e5182bd-536a-4fdb-8632-6392efbdf71e"
+}
