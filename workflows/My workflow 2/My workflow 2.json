@@ -371,7 +371,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "position": [
         680,
-        560
+        540
       ],
       "typeVersion": 4.2
     },
@@ -517,7 +517,7 @@
           "value": "={{ $('Config').first().json.repo_name }}",
           "mode": "name"
         },
-        "filePath": "={{ $('Config').first().json.repo_path }}{{ $json.subPath }}{{$('Execute Workflow Trigger').first().json.name}}.json",
+        "filePath": "={{ $('Config').first().json.repo_path }}{{ $json.subPath }}{{encodeURIComponent($('Execute Workflow Trigger').first().json.name)}}.json",
         "fileContent": "={{$('isDiffOrNew').item.json[\"n8n_data_stringy\"]}}",
         "commitMessage": "={{$('Execute Workflow Trigger').first().json.name}} ({{$json.github_status}})"
       },
@@ -610,7 +610,7 @@
               "id": "dae43d3b-56e5-4098-b602-862ebf5cd073",
               "name": "subPath",
               "type": "string",
-              "value": "={{ $('Execute Workflow Trigger').first().json.name }}/"
+              "value": "={{$('Execute Workflow Trigger').first().json.name}}/"
             }
           ]
         },
@@ -845,6 +845,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-03-07T12:42:41.000Z",
-  "versionId": "a8b27d11-51b9-4e15-aa4b-ef97c0dc14ef"
+  "updatedAt": "2025-03-07T13:12:17.000Z",
+  "versionId": "c4d77042-7a4a-4632-86d9-924b11ea309d"
 }
