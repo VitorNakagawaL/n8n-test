@@ -777,7 +777,7 @@
           "value": "={{ $('Config').first().json.repo_name }}",
           "mode": "name"
         },
-        "filePath": "={{ $('Config').first().json.repo_path }}{{ $('Execute Workflow Trigger').first().json.name}}/{{$json.name}}.json",
+        "filePath": "={{ $('Config').first().json.repo_path }}{{ $('Execute Workflow Trigger').first().json.name}}/{{$json.name.replace(/\\//g, \"-\")}}.json",
         "asBinaryProperty": false,
         "additionalParameters": {}
       },
@@ -845,6 +845,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2025-03-07T13:22:12.000Z",
-  "versionId": "8e81d59d-d6d2-4b05-b9c8-f3517741bbc6"
+  "updatedAt": "2025-03-07T17:07:46.000Z",
+  "versionId": "ef38e5d9-fcba-4557-a07a-8b3df34fe6a6"
 }
